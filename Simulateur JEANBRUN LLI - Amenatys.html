@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>AMENATYS PRO - Simulateur & Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* =========================================
+           VARIABLES & RESET
+           ========================================= */
+        :root {
+            /* Couleurs extraites du logo Amenatys */
+            --brand-green: #48B685;
+            --brand-green-hover: #3AA072;
+            --brand-green-light: #E8F6F0;
+            --brand-dark: #000000;
+            --text-main: #334155;
+            --text-muted: #64748B;
+            --bg-body: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --border: #E2E8F0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.03);
+            --radius-md: 12px;
+            --radius-lg: 20px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 100px; /* Space for mobile footer */
+        }
+
+        /* UTILITIES */
+        .flex { display: flex; }
+        .grid { display: grid; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .text-green { color: var(--brand-green); }
+        .font-bold { font-weight: 700; }
+        
+        /* ICONS (SVG) */
+        svg { flex-shrink: 0; }
+
+        /* =========================================
+           HEADER & NAVIGATION
+           ========================================= */
+        header {
+            background-color: var(--bg-card);
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--border);
+        }
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-container img {
+            height: 48px; /* Taille optimale pour le logo Amenatys */
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            background: #F1F5F9;
+            padding: 4px;
+            border-radius: 12px;
+            margin-top: 24px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn.active {
+            background: var(--bg-card);
+            color: var(--brand-dark);
+            box-shadow: var(--shadow-sm);
+        }
+        .tab-btn svg { width: 18px; height: 18px; }
+
+        /* VIEWS */
+        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* =========================================
+           MAIN LAYOUT (SIMULATOR)
+           ========================================= */
+        .main-container {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 0 16px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        @media(min-width: 992px) {
+            .main-container { grid-template-columns: 5fr 6fr; }
+            body { padding-bottom: 40px; }
+            .mobile-sticky-footer { display: none !important; }
+        }
+
+        /* =========================================
+           CARDS & PANELS
+           ========================================= */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0,0,0,0.02);
+            margin-bottom: 24px;
+        }
+        .card-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 24px; padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 16px; font-weight: 700; color: var(--brand-dark);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .icon-box {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--brand-green-light); color: var(--brand-green);
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* =========================================
+           FORM CONTROLS (UI PREMIUM)
+           ========================================= */
+        .input-group { margin-bottom: 24px; }
+        .input-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px; }
+        .label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .value-display { font-size: 18px; font-weight: 800; color: var(--brand-green); }
+
+        /* Dual Input */
+        .dual-input { display: flex; flex-direction: column; gap: 12px; }
+        .input-wrapper { position: relative; }
+        .input-wrapper input[type="number"], .input-wrapper select {
+            width: 100%; padding: 14px 16px; font-size: 16px; font-weight: 700; color: var(--brand-dark);
+            background: #F8FAFC; border: 2px solid var(--border); border-radius: var(--radius-md); 
+            outline: none; transition: all 0.2s; appearance: none;
+        }
+        .input-wrapper input[type="number"]:focus, .input-wrapper select:focus { 
+            border-color: var(--brand-green); background: white; box-shadow: 0 0 0 4px var(--brand-green-light);
+        }
+        .input-wrapper .suffix { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-weight: 600; color: var(--text-muted); }
+
+        /* Range Slider Styling */
+        input[type="range"] {
+            -webkit-appearance: none; width: 100%; height: 6px; background: var(--border); border-radius: 4px; outline: none; margin-top: 4px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
+            background: var(--brand-green); cursor: pointer; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.15); transition: transform 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:active { transform: scale(1.15); }
+
+        /* Segmented TMI */
+        .tmi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #F1F5F9; padding: 6px; border-radius: 14px; }
+        .tmi-btn {
+            background: transparent; border: none; border-radius: 10px;
+            padding: 12px 0; font-size: 14px; font-weight: 700; color: var(--text-muted);
+            text-align: center; cursor: pointer; transition: all 0.2s;
+        }
+        .tmi-btn.active { background: var(--bg-card); color: var(--brand-dark); box-shadow: var(--shadow-sm); }
+
+        /* =========================================
+           RESULTS DASHBOARD
+           ========================================= */
+        .hero-result {
+            background: var(--brand-dark);
+            border-radius: var(--radius-lg); padding: 32px 24px; color: white; text-align: center;
+            box-shadow: var(--shadow-lg); position: relative; overflow: hidden; margin-bottom: 24px;
+        }
+        /* Graphic element in hero */
+        .hero-result::before {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(72,182,133,0.2) 0%, rgba(0,0,0,0) 70%); border-radius: 50%; z-index: 0;
+        }
+        .hero-content { position: relative; z-index: 1; }
+        .hero-label { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #94A3B8; }
+        .hero-value { font-size: 48px; font-weight: 800; margin: 12px 0; color: var(--brand-green); letter-spacing: -1px; line-height: 1; }
+        .hero-sub { font-size: 14px; font-weight: 500; color: #CBD5E1; }
+
+        .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        .kpi-box { background: var(--brand-green-light); border-radius: var(--radius-md); padding: 20px; text-align: center; border: 1px solid rgba(72,182,133,0.1); }
+        .kpi-box .kpi-val { font-size: 24px; font-weight: 800; color: var(--brand-green); margin-top: 4px; }
+        .kpi-box .kpi-lbl { font-size: 12px; font-weight: 600; color: var(--brand-dark); text-transform: uppercase; }
+
+        /* Breakdown Table */
+        .breakdown-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        .breakdown-table td { padding: 12px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+        .breakdown-table tr:last-child td { border-bottom: none; }
+        .td-label { color: var(--text-muted); font-weight: 500; }
+        .td-value { text-align: right; font-weight: 700; color: var(--brand-dark); }
+        .td-positive { color: var(--brand-green); }
+
+        /* Comparative Box */
+        .comp-box {
+            background: #F8FAFC; border-radius: var(--radius-md); padding: 20px; margin-top: 24px; border: 1px solid var(--border);
+        }
+        .comp-box h3 { font-size: 14px; text-transform: uppercase; color: var(--brand-dark); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .comp-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; }
+        .comp-col { text-align: center; padding: 16px; background: white; border-radius: 12px; box-shadow: var(--shadow-sm); }
+        .comp-col.highlight { border: 2px solid var(--brand-green); position: relative; }
+        .comp-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--brand-green); color: white; font-size: 10px; font-weight: 800; padding: 2px 10px; border-radius: 10px; text-transform: uppercase; white-space: nowrap; }
+        .comp-title { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
+        .comp-val { font-size: 20px; font-weight: 800; color: var(--brand-dark); }
+        .vs-badge { background: var(--text-muted); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 10px; font-weight: 800; margin: 0 auto; }
+
+        /* =========================================
+           GUIDE & ESSENTIELS VIEW
+           ========================================= */
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            max-width: 1000px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+        @media(min-width: 768px) { .guide-grid { grid-template-columns: 1fr 1fr; } }
+        
+        .guide-card {
+            background: white; border-radius: var(--radius-lg); padding: 24px;
+            border-top: 4px solid var(--brand-green); box-shadow: var(--shadow-md);
+        }
+        .guide-card h3 { font-size: 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .guide-list { list-style: none; }
+        .guide-list li {
+            position: relative; padding-left: 24px; margin-bottom: 12px; font-size: 14px; color: var(--text-main);
+        }
+        .guide-list li::before {
+            content: '✓'; position: absolute; left: 0; top: 0; color: var(--brand-green); font-weight: bold;
+        }
+        .alert-box { background: #FEF2F2; border-left: 4px solid #EF4444; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-top: 16px; font-size: 13px; color: #991B1B; }
+
+        /* =========================================
+           MOBILE STICKY FOOTER & PRINT
+           ========================================= */
+        .mobile-sticky-footer {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--brand-dark); padding: 16px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; border-top: 3px solid var(--brand-green);
+        }
+        .msf-label { font-size: 12px; font-weight: 600; color: #94A3B8; text-transform: uppercase; }
+        .msf-value { font-size: 24px; font-weight: 800; color: var(--brand-green); line-height: 1.2; }
+
+        .btn-print {
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            width: 100%; background: var(--bg-body); color: var(--brand-dark);
+            padding: 16px; border-radius: var(--radius-md); font-size: 15px; font-weight: 700;
+            text-transform: uppercase; margin-top: 24px; border: 2px solid var(--border); cursor: pointer; transition: 0.2s;
+        }
+        .btn-print:hover { background: var(--border); }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .mobile-sticky-footer, .btn-print, header, .tabs, input[type="range"] { display: none !important; }
+            .main-container { display: block; margin: 0; }
+            .card { box-shadow: none; border: 1px solid #ddd; margin-bottom: 20px; page-break-inside: avoid; }
+            .hero-result { background: white; color: black; border: 2px solid black; box-shadow: none; }
+            .hero-result .hero-value { color: black; }
+            .hero-result::before { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <div class="logo-container">
+                <!-- LE LOGO EST DÉSORMAIS DIRECTEMENT INCRUSTÉ DANS LE FICHIER HTML (BASE64) -->
+                <img src="data:image/png;base64,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" alt="Amenatys Logo">
+            </div>
+            <div style="font-size: 12px; font-weight: 700; color: var(--brand-green); background: var(--brand-green-light); padding: 6px 12px; border-radius: 20px;">
+                PRO
+            </div>
+        </div>
+    </header>
+
+    <!-- NAVIGATION TABS -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('simul', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Simulateur
+        </button>
+        <button class="tab-btn" onclick="switchTab('guide', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Essentiels & Guide
+        </button>
+    </div>
+
+    <!-- ==========================================
+         VUE 1 : SIMULATEUR
+         ========================================== -->
+    <div id="view-simul" class="view-section active">
+        <div class="main-container">
+
+            <!-- COLONNE GAUCHE : PARAMETRES -->
+            <div class="card">
+                <h2 class="card-header">
+                    <div class="icon-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>
+                    </div>
+                    Paramètres d'Investissement
+                </h2>
+
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div class="input-wrapper">
+                        <div class="label" style="margin-bottom: 8px;">Typologie</div>
+                        <select id="typology" onchange="applyPreset()">
+                            <option value="T1">Studio / T1</option>
+                            <option value="T2">T2</option>
+                            <option value="T3" selected>T3</option>
+                            <option value="T4">T4</option>
+                            <option value="T5">T5</option>
+                        </select>
+                    </div>
+                    <div class="input-wrapper">
+                        <div class="label" style="margin-bottom: 8px;">Surface</div>
+                        <input type="number" id="surface" value="64" oninput="calc()">
+                        <span class="suffix">m²</span>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <span class="label">Prix de Vente HT</span>
+                        <span class="value-display" id="dispPrixHT">220 000 €</span>
+                    </div>
+                    <div class="dual-input">
+                        <div class="input-wrapper">
+                            <input type="number" id="numPrixHT" value="220000" step="1000" oninput="sync('numPrixHT', 'rangePrixHT'); calc();">
+                            <span class="suffix">€</span>
+                        </div>
+                        <input type="range" id="rangePrixHT" min="80000" max="600000" step="1000" value="220000" oninput="sync('rangePrixHT', 'numPrixHT'); calc();">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <span class="label">Loyer Mensuel (Plafond LLI)</span>
+                        <span class="value-display" id="dispLoyer" style="color: var(--brand-dark);">780 €</span>
+                    </div>
+                    <div class="dual-input">
+                        <div class="input-wrapper">
+                            <input type="number" id="numLoyer" value="780" step="10" oninput="sync('numLoyer', 'rangeLoyer'); calc();">
+                            <span class="suffix">€ / mois</span>
+                        </div>
+                        <input type="range" id="rangeLoyer" min="300" max="2500" step="10" value="780" oninput="sync('rangeLoyer', 'numLoyer'); calc();">
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-top: 32px;">
+                    <div class="input-header">
+                        <span class="label">TMI Prospect (Tranche d'Impôt)</span>
+                    </div>
+                    <div class="tmi-grid">
+                        <button class="tmi-btn" onclick="setTMI(0.11, this)">11%</button>
+                        <button class="tmi-btn active" onclick="setTMI(0.30, this)">30%</button>
+                        <button class="tmi-btn" onclick="setTMI(0.41, this)">41%</button>
+                        <button class="tmi-btn" onclick="setTMI(0.45, this)">45%</button>
+                    </div>
+                </div>
+
+                <h3 class="card-header" style="margin-top: 32px;">
+                    <div class="icon-box">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    Financement
+                </h3>
+
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div class="input-wrapper">
+                        <div class="label" style="margin-bottom: 8px;">Apport</div>
+                        <input type="number" id="apport" value="30000" step="1000" oninput="calc()">
+                        <span class="suffix">€</span>
+                    </div>
+                    <div class="input-wrapper">
+                        <div class="label" style="margin-bottom: 8px;">Durée</div>
+                        <select id="duree" onchange="calc()">
+                            <option value="15">15 ans</option>
+                            <option value="20" selected>20 ans</option>
+                            <option value="25">25 ans</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <div class="input-header">
+                        <span class="label">Taux d'Intérêt</span>
+                        <span class="value-display" id="dispTaux" style="color: var(--brand-dark);">3.80 %</span>
+                    </div>
+                    <input type="range" id="taux" min="1.0" max="6.0" step="0.05" value="3.8" oninput="calc()">
+                </div>
+            </div>
+
+            <!-- COLONNE DROITE : RESULTATS -->
+            <div>
+                <div class="hero-result">
+                    <div class="hero-content">
+                        <div class="hero-label">Effort d'Épargne Mensuel Net</div>
+                        <div class="hero-value" id="resEffortNet">240 €</div>
+                        <div class="hero-sub">Reste à charge réel après perception des loyers et économies d'impôts</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="card-header">
+                        <div class="icon-box">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        Synthèse des Avantages
+                    </h2>
+                    
+                    <div class="kpi-grid">
+                        <div class="kpi-box">
+                            <div class="kpi-lbl">Gain TVA (LLI 10%)</div>
+                            <div class="kpi-val" id="kpiTva">22 000 €</div>
+                        </div>
+                        <div class="kpi-box">
+                            <div class="kpi-lbl">Gain Fiscal (9 ans)</div>
+                            <div class="kpi-val" id="kpiFisc9">26 168 €</div>
+                        </div>
+                    </div>
+
+                    <table class="breakdown-table">
+                        <tr>
+                            <td class="td-label">Prix d'Acquisition TTC (10%)</td>
+                            <td class="td-value" id="bdPrixTTC">242 000 €</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">Mensualité du Prêt</td>
+                            <td class="td-value" id="bdMens">1 262 €</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">Loyer Perçu</td>
+                            <td class="td-value td-positive" id="bdLoyer">+ 780 €</td>
+                        </tr>
+                        <tr>
+                            <td class="td-label">Gain Fiscal Équivalent Mensuel</td>
+                            <td class="td-value td-positive" id="bdGainFisc">+ 242 €</td>
+                        </tr>
+                        <tr style="border-top: 2px solid var(--border);">
+                            <td class="td-label" style="font-weight: 700; color: var(--brand-dark); padding-top: 16px;">Avantage Financier Global</td>
+                            <td class="td-value" style="font-size: 18px; color: var(--brand-green); padding-top: 16px;" id="bdAvantageTotal">+ 48 168 €</td>
+                        </tr>
+                    </table>
+
+                    <div class="comp-box">
+                        <h3>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+                            Comparatif
+                        </h3>
+                        <div class="comp-grid">
+                            <div class="comp-col">
+                                <div class="comp-title">VEFA Classique (20%)</div>
+                                <div class="comp-val" id="tblEffort20" style="color: var(--text-muted);">585 €</div>
+                                <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">/ mois</div>
+                            </div>
+                            <div class="vs-badge">VS</div>
+                            <div class="comp-col highlight">
+                                <div class="comp-badge">JEANBRUN + LLI</div>
+                                <div class="comp-title">Effort Net</div>
+                                <div class="comp-val" id="tblEffort10" style="color: var(--brand-green);">240 €</div>
+                                <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">/ mois</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-print" onclick="window.print()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        Fiche Synthèse PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         VUE 2 : ESSENTIELS & GUIDE
+         ========================================== -->
+    <div id="view-guide" class="view-section">
+        <div class="guide-grid">
+            
+            <div class="guide-card">
+                <h3>
+                    <div class="icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                    Dispositif LLI (TVA 10%)
+                </h3>
+                <ul class="guide-list">
+                    <li><strong>Avantage :</strong> TVA réduite à 10% au lieu de 20% sur le prix d'acquisition.</li>
+                    <li><strong>Zonage :</strong> Applicable en zones tendues (A, A bis, B1).</li>
+                    <li><strong>Engagement :</strong> Location nue à titre de résidence principale.</li>
+                    <li><strong>Durée :</strong> Minimum 10 ans. Pour éviter toute reprise de TVA à la revente, la conservation optimale est de 20 ans (ou revente à un acquéreur poursuivant l'engagement).</li>
+                    <li><strong>Plafonds :</strong> Respect des plafonds de loyers et de ressources des locataires (spécifiques au LLI).</li>
+                    <li><strong>Mixité :</strong> Le programme doit inclure au moins 25% de logements sociaux (ou conditions spécifiques de la commune).</li>
+                </ul>
+            </div>
+
+            <div class="guide-card">
+                <h3>
+                    <div class="icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+                    Dispositif JEANBRUN (Amortissement)
+                </h3>
+                <ul class="guide-list">
+                    <li><strong>Avantage :</strong> Déduction d'un amortissement sur les revenus fonciers (Régime Réel).</li>
+                    <li><strong>Taux (Secteur LLI) :</strong> Amortissement de <strong>3,5 % par an</strong> de la base éligible.</li>
+                    <li><strong>Base amortissable :</strong> Le prix d'acquisition HT <strong>hors quote-part terrain</strong> (le terrain n'est pas amortissable, on retient généralement 80% de la valeur totale).</li>
+                    <li><strong>Engagement :</strong> Location nue pendant au moins <strong>9 ans</strong>.</li>
+                    <li><strong>Famille :</strong> Interdiction de louer à un membre du foyer fiscal, ni à un ascendant/descendant (jusqu'au 2ème degré).</li>
+                </ul>
+                <div class="alert-box">
+                    <strong>Calcul du gain réel :</strong> Le montant amorti est déduit des revenus. Le client économise donc sa TMI (ex: 30%) + les prélèvements sociaux (17,2%), soit <strong>47,2%</strong> de la somme amortie !
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <h3>
+                    <div class="icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+                    Profils & Véhicules Juridiques
+                </h3>
+                <ul class="guide-list">
+                    <li><strong>Personne Physique :</strong> Éligible.</li>
+                    <li><strong>SCI à l'IR (Impôt sur le Revenu) :</strong> Éligible.</li>
+                    <li><strong>SARL de Famille :</strong> <span style="color: #EF4444; font-weight: bold;">Inéligible</span> (exclue explicitement par l'Art 31 du CGI pour ce dispositif).</li>
+                    <li><strong>Démembrement (Nue-propriété / Usufruit) :</strong> <span style="color: #EF4444; font-weight: bold;">Inéligible</span> (sauf en cas de décès de l'un des époux).</li>
+                    <li><strong>Société à l'IS :</strong> Inéligible.</li>
+                </ul>
+            </div>
+
+            <div class="guide-card">
+                <h3>
+                    <div class="icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>
+                    Astuces Commerciales
+                </h3>
+                <ul class="guide-list">
+                    <li><strong>L'effet "Double Effet Kiss Cool" :</strong> Insistez sur le fait que le client gagne immédiatement à l'achat (TVA 10%) ET chaque année sur ses impôts (Jeanbrun). C'est le dispositif le plus puissant actuellement.</li>
+                    <li><strong>Rassurer sur le LLI :</strong> Les plafonds de loyers LLI sont proches des prix du marché libre, garantissant une bonne rentabilité brute.</li>
+                    <li><strong>Trésorerie mensuelle :</strong> Montrez toujours l'<strong>Effort d'Épargne Net</strong>. Un T3 à 220 000€ HT peut coûter moins de 250€/mois réel à un cadre avec une TMI à 30%.</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MOBILE STICKY FOOTER -->
+    <div class="mobile-sticky-footer">
+        <div>
+            <div class="msf-label">Avantage Global</div>
+            <div class="msf-value" style="color: white; font-size: 18px;" id="stickAvantage">+ 48 168 €</div>
+        </div>
+        <div style="text-align: right;">
+            <div class="msf-label">Effort Net</div>
+            <div class="msf-value" id="stickEffort">240 €<span style="font-size: 14px; color: var(--brand-green-light);">/m</span></div>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIQUE -->
+    <script>
+        // Tab Switching Logic
+        function switchTab(viewId, btnElement) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById('view-' + viewId).classList.add('active');
+            btnElement.classList.add('active');
+
+            // Hide sticky footer on Guide view
+            const footer = document.querySelector('.mobile-sticky-footer');
+            if(viewId === 'guide') {
+                footer.style.display = 'none';
+            } else {
+                footer.style.display = 'flex';
+            }
+        }
+
+        // Data Base Presets
+        const DATA = {
+            'T1': { s: 28, p: 110000, l: 420 },
+            'T2': { s: 42, p: 160000, l: 590 },
+            'T3': { s: 64, p: 220000, l: 780 },
+            'T4': { s: 82, p: 285000, l: 960 },
+            'T5': { s: 98, p: 340000, l: 1150 }
+        };
+
+        let currentTMI = 0.30;
+
+        // Formatter
+        const fmt = (num) => Math.round(num).toLocaleString('fr-FR') + ' €';
+
+        function applyPreset() {
+            const t = document.getElementById('typology').value;
+            const d = DATA[t] || DATA['T3'];
+            document.getElementById('surface').value = d.s;
+            document.getElementById('numPrixHT').value = d.p;
+            document.getElementById('rangePrixHT').value = d.p;
+            document.getElementById('numLoyer').value = d.l;
+            document.getElementById('rangeLoyer').value = d.l;
+            calc();
+        }
+
+        function setTMI(val, btn) {
+            currentTMI = val;
+            document.querySelectorAll('.tmi-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            calc();
+        }
+
+        function sync(sourceId, targetId) {
+            document.getElementById(targetId).value = document.getElementById(sourceId).value;
+            // Update display values live
+            if(sourceId === 'rangePrixHT' || sourceId === 'numPrixHT') {
+                document.getElementById('dispPrixHT').innerText = fmt(document.getElementById(sourceId).value);
+            }
+            if(sourceId === 'rangeLoyer' || sourceId === 'numLoyer') {
+                document.getElementById('dispLoyer').innerText = fmt(document.getElementById(sourceId).value) + ' / mois';
+            }
+        }
+
+        // PMT Function (Calcul Mensualité)
+        function pmt(rate, nper, pv) {
+            if (rate === 0) return pv / nper;
+            return (pv * rate) / (1 - Math.pow(1 + rate, -nper));
+        }
+
+        function calc() {
+            // Retrieve Inputs
+            const pHT = parseFloat(document.getElementById('numPrixHT').value) || 0;
+            const loyer = parseFloat(document.getElementById('numLoyer').value) || 0;
+            const apport = parseFloat(document.getElementById('apport').value) || 0;
+            const annees = parseInt(document.getElementById('duree').value) || 20;
+            const taux = parseFloat(document.getElementById('taux').value) || 0;
+
+            // Update UI Displays
+            document.getElementById('dispPrixHT').innerText = fmt(pHT);
+            document.getElementById('dispLoyer').innerText = fmt(loyer) + ' / mois';
+            document.getElementById('dispTaux').innerText = taux.toFixed(2) + ' %';
+
+            // Core Logic
+            const pTTC_LLI = pHT * 1.10;
+            const pTTC_STD = pHT * 1.20;
+            const econTVA = pTTC_STD - pTTC_LLI;
+
+            // Jeanbrun (3.5% sur 80% du HT)
+            const amortAn = (pHT * 0.80) * 0.035;
+            
+            // Fisc (TMI + PS 17.2%)
+            const gainFiscAn = amortAn * (currentTMI + 0.172);
+            const gainFisc9 = gainFiscAn * 9;
+            const avantageGlobal = econTVA + gainFisc9;
+
+            // Financement LLI
+            const empruntLLI = Math.max(0, pTTC_LLI - apport);
+            const mensLLI = pmt(taux / 100 / 12, annees * 12, empruntLLI);
+            const effortNetLLI = (mensLLI - loyer) - (gainFiscAn / 12);
+
+            // Financement Standard (Loyer classique estimé +10% car LLI est plafonné)
+            const empruntSTD = Math.max(0, pTTC_STD - apport);
+            const mensSTD = pmt(taux / 100 / 12, annees * 12, empruntSTD);
+            const loyerSTD = loyer * 1.10; 
+            const effortNetSTD = mensSTD - loyerSTD;
+
+            // Inject to DOM (Dashboard)
+            document.getElementById('resEffortNet').innerHTML = fmt(effortNetLLI) + '<span style="font-size:24px; font-weight:600; opacity:0.8; margin-left:4px;">/ mois</span>';
+            document.getElementById('kpiTva').innerText = fmt(econTVA);
+            document.getElementById('kpiFisc9').innerText = fmt(gainFisc9);
+
+            // Inject to DOM (Breakdown)
+            document.getElementById('bdPrixTTC').innerText = fmt(pTTC_LLI);
+            document.getElementById('bdMens').innerText = fmt(mensLLI);
+            document.getElementById('bdLoyer').innerText = '+ ' + fmt(loyer);
+            document.getElementById('bdGainFisc').innerText = '+ ' + fmt(gainFiscAn / 12);
+            document.getElementById('bdAvantageTotal').innerText = '+ ' + fmt(avantageGlobal);
+
+            // Inject to DOM (Table)
+            document.getElementById('tblEffort20').innerText = fmt(effortNetSTD);
+            document.getElementById('tblEffort10').innerText = fmt(effortNetLLI);
+
+            // Inject to DOM (Mobile Sticky)
+            document.getElementById('stickAvantage').innerText = '+ ' + fmt(avantageGlobal);
+            document.getElementById('stickEffort').innerHTML = fmt(effortNetLLI) + '<span style="font-size:14px; color:var(--brand-green-light); margin-left:2px;">/m</span>';
+        }
+
+        // Init
+        calc();
+    </script>
+</body>
+</html>
